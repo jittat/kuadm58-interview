@@ -128,6 +128,7 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
   $scope.show_modal_station2 = function() {
     $scope.gpa_pass = Station[2].gpa_pass
     $scope.study_plan_pass = Station[2].study_plan_pass
+    $scope.original_documents = Station[2].original_documents
     $("#station2_modal").modal('show')
   }
 
@@ -239,8 +240,11 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
         $scope.permission_denied()
         return;
       }
-      if (info.result == 'ok' && parseInt(info.state) == 2 && helper.boolToInt(
-          info.is_gpa_verified) == 1 && helper.boolToInt(info.is_study_plan_verified) == 1) {
+      if (info.result == 'ok') {
+        info.document_passed = (helper.boolToInt(info.is_gpa_verified) == 1 &&
+                                helper.boolToInt(info.is_study_plan_verified) == 1);
+      }
+      if (info.result == 'ok' && parseInt(info.state) == 2) {
         $scope.info = info
       } else if (info.result == 'ok' && parseInt(info.state) == 4) {
         // handle come again

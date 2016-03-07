@@ -22,6 +22,10 @@
             <div class="col-md-4"><h4><b>สาขาวิชา-คณะ</b></h4></div>
             <div class="col-md-6"><h4>{{info.major.title}}</h4></div>
         </div>
+        <div class="row" ng-show="! info.document_passed">
+            <div class="col-md-4"><h4><b>ผลการตรวจสอบหลักฐาน</b></h4></div>
+            <div class="col-md-6"><h4><b><span class="glyphicon glyphicon-remove" aria-hidden="true"  style="color:#c12e2a;"></span> ไม่ผ่าน</b></h4></div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="hide_modal_station4()">ยกเลิก</button>

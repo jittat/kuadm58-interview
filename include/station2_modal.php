@@ -67,7 +67,24 @@
                 </h4>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-offset-4 col-md-3">
+                <h4>ใช้เอกสารฉบับจริง</h4>
+            </div>
+            <div class="col-md-2">
+                <h4>
+                    <input type="radio" name="is_original_documents" value="true" id="original_documents_pass" ng-model="original_documents">
+                    <font color="green"><label for="original_documents_pass">&nbsp;ผ่าน</label></font>
+                </h4>
+            </div>
+            <div class="col-md-2">
+                <h4>
+                    <input type="radio" name="is_original_documents" value="false" id="original_documents_notpass" ng-model="original_documents"><font color="red">
+                    <label for="original_documents_notpass">&nbsp;ไม่ผ่าน</label></font>
+                </h4>
+            </div>
         </div>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="hide_modal_station2()">Close</button>
         <button type="button" class="btn btn-success" ng-click="confirm_station2()">Submit</button>
