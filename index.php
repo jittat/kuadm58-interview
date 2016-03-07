@@ -36,6 +36,7 @@
         <? include __DIR__."/include/station1_modal.php" ?>
         <? include __DIR__."/include/station2_modal.php" ?>
         <? include __DIR__."/include/station3_modal.php" ?>
+        <? include __DIR__."/include/station4_modal.php" ?>
         <? include __DIR__."/include/notification_modal.php" ?>
 		</div>
 
@@ -59,6 +60,7 @@
 	          <td class="info" ng-show="history.is_pass=='true'"><center><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true" style="color:#419641;"></span></center></td>
 	          <td></td>
 	          <td class="danger" ng-show="history.is_pass=='false'"><center><span class="glyphicon glyphicon-remove" aria-hidden="true"  style="color:#c12e2a;"></span></center></td>
+	          <td ng-show="history.is_pass=='none'"></td>
 	        </tr>
 	      </tbody>
 		</table>

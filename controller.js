@@ -38,8 +38,7 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
       $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.NOT_FOUND)
     } else if (info.result == 'ok') {
       $scope.info = info
-      if (parseInt(info.state) == 3 && helper.boolToInt(info.is_passed) ==
-        0) {
+      if (parseInt(info.state) == 3 && helper.boolToInt(info.is_passed) == 0) {
         // Not pass and Go home
         $scope.showname = true
         $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.NOT_PASS_INTERVIEW)
@@ -223,6 +222,48 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
   // END STATION 3 //////////////////////////////////////
 
 
+  // STATION 4 //////////////////////////////////////
+
+  $scope.show_modal_station4 = function() {
+    $("#station4_modal").modal('show')
+  }
+
+  $scope.hide_modal_station4 = function() {
+    $("#station4_modal").modal('hide')
+    $scope.reset_barcode()
+  }
+
+  $scope.submit_station4 = function() {
+    infoService.getInfo($scope.barcode).then(function(info) {
+      if (parseInt(info.status_code) == 403) {
+        $scope.permission_denied()
+        return;
+      }
+      if (info.result == 'ok' && parseInt(info.state) == 2 && helper.boolToInt(
+          info.is_gpa_verified) == 1 && helper.boolToInt(info.is_study_plan_verified) == 1) {
+        $scope.info = info
+      } else if (info.result == 'ok' && parseInt(info.state) == 4) {
+        // handle come again
+        $scope.info = info
+        $scope.overlap = true
+      } else {
+        handle_state_abnormal(info)
+        return;
+      }
+      $scope.show_modal_station4()
+    })
+  }
+
+  $scope.confirm_station4 = function() {
+    // console.log($scope.info.n)
+    infoService.updateStation4($scope.info.national_id)
+    add_history($scope.info.full_name, $scope.info.major.title, 'none')
+    $scope.hide_modal_station4()
+  }
+
+  // END STATION 4 //////////////////////////////////////
+
+
   $scope.submit = function() {
     $scope.have_come = Config.state_handle.HAVE_COME
     $scope.overlap = false
@@ -232,6 +273,8 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
       $scope.submit_station2()
     } else if (Config.STATION == 3) {
       $scope.submit_station3()
+    } else if (Config.STATION == 4) {
+      $scope.submit_station4()
     }
   }
 

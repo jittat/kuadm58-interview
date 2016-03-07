@@ -3,6 +3,7 @@ app.service('infoService', function($http, $q) {
   var STATE_DOCUMENT_VERIFIED = 1;
   var STATE_EDU_DOC_VERIFIED = 2;
   var STATE_INTERVIEWED = 3;
+  var STATE_DONE = 4;
 
   this.getInfo = function(national_id) {
     var deferred = $q.defer()
@@ -69,6 +70,23 @@ app.service('infoService', function($http, $q) {
       'data': JSON.stringify({
         'state': STATE_INTERVIEWED,
         'is_passed': helper.boolToInt(pass_all),
+      })
+
+    }).
+    done(function(data) {
+      deferred.resolve(data)
+    })
+
+    return deferred.promise
+  }
+  
+  this.updateStation4 = function(national_id) {
+    var deferred = $q.defer()
+
+    $.post(Config.PATH_POST_INFO + helper.decodeNationalID(
+      national_id), {
+      'data': JSON.stringify({
+        'state': STATE_DONE,
       })
 
     }).
