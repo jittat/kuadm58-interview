@@ -125,8 +125,7 @@ app.controller('barcodeController', function($scope, infoService) {
 
   $scope.submit_station2 = function() {
     infoService.getInfo($scope.barcode).then(function(info) {
-      if (info.result == 'ok' && parseInt(info.state) == 1 && helper.boolToInt(
-          info.documents) == 1) {
+      if (info.result == 'ok' && parseInt(info.state) == 0) {
         $scope.info = info
       } else if (info.result == 'ok' && parseInt(info.state) == 2) {
         // handle come again
