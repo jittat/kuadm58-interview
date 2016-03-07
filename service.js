@@ -8,8 +8,17 @@ app.service('infoService', function($http, $q) {
     var deferred = $q.defer()
 
     $http.get(Config.PATH_GET_INFO + helper.decodeNationalID(national_id))
-      .success(function(data) {
+      .success(function(data, status, headers, config) {
+        data.status_code = parseInt(status)
         deferred.resolve(data)
+      })
+      .error(function(data, status, headers, config) {
+        dummy = {
+          'status_code': parseInt(status)
+        }
+
+        deferred.resolve(dummy)
+
       })
 
     return deferred.promise

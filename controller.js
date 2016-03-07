@@ -1,4 +1,4 @@
-app.controller('barcodeController', function($scope, infoService) {
+app.controller('barcodeController', function($scope, infoService, $sce) {
 
   $scope.historys = [];
   $scope.colume_titles = Station[Config.STATION].column;
@@ -11,8 +11,20 @@ app.controller('barcodeController', function($scope, infoService) {
     });
   }
 
-  function reset_barcode() {
+  $scope.reset_barcode = function() {
     $scope.barcode = ''
+  }
+
+  $scope.permission_denied = function() {
+    $scope.showname = false
+    $scope.info = {
+      'national_id': $scope.barcode
+    }
+    $scope.notification_msg = $sce.trustAsHtml(
+      'คุณไม่มีสิทธิ์เข้าใช้งาน: กรุณา Login ที่ <a href="' + Config.PATH_LOGIN +
+      '">Login</a>')
+
+    $scope.show_modal_error()
   }
 
   function handle_state_abnormal(info) {
@@ -23,37 +35,36 @@ app.controller('barcodeController', function($scope, infoService) {
       $scope.info = {
         'national_id': $scope.barcode
       }
-      $scope.notification_msg = Config.state_handle.NOT_FOUND
+      $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.NOT_FOUND)
     } else if (info.result == 'ok') {
       $scope.info = info
       if (parseInt(info.state) == 3 && helper.boolToInt(info.is_passed) ==
         0) {
         // Not pass and Go home
         $scope.showname = true
-        $scope.notification_msg = Config.state_handle.NOT_PASS_INTERVIEW
+        $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.NOT_PASS_INTERVIEW)
       } else if (parseInt(info.state) == 2 && (helper.boolToInt(info.is_study_plan_verified) ==
           0 || helper.boolToInt(info.is_gpa_verified) == 0)) {
         // Get out to home
 
         $scope.showname = true
-        $scope.notification_msg = Config.state_handle.NOT_PASS_PROPERTIES
+        $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.NOT_PASS_PROPERTIES)
 
       } else if (parseInt(info.state) == 1 && (helper.boolToInt(info.documents) ==
           0)) {
         // Go to station 1
         $scope.showname = true
-        $scope.notification_msg = Config.state_handle.GO_TO_STATION1
+        $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.GO_TO_STATION1)
       } else if (parseInt(info.state) == 3 && helper.boolToInt(info.is_passed) ==
         1) {
         // pass all
         $scope.showname = true
-        $scope.notification_msg = Config.state_handle.PASS_ALL
+        $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.PASS_ALL)
       } else {
         // Incorrect station
         $scope.showname = true
-        $scope.notification_msg = Config.state_handle.INCORRECT_STATION +
-          (
-            parseInt(info.state) + 1)
+        $scope.notification_msg = $sce.trustAsHtml(Config.state_handle.INCORRECT_STATION +
+          (parseInt(info.state) + 1))
 
       }
 
@@ -76,12 +87,15 @@ app.controller('barcodeController', function($scope, infoService) {
 
   $scope.hide_modal_station1 = function() {
     $("#station1_modal").modal('hide')
-    reset_barcode()
+    $scope.reset_barcode()
   }
 
   $scope.submit_station1 = function() {
     infoService.getInfo($scope.barcode).then(function(info) {
-
+      if (parseInt(info.status_code) == 403) {
+        $scope.permission_denied()
+        return;
+      }
       if (info.result == 'ok' && parseInt(info.state) == 0) {
         $scope.info = info
       } else if (info.result == 'ok' && parseInt(info.state) == 1) {
@@ -120,11 +134,15 @@ app.controller('barcodeController', function($scope, infoService) {
 
   $scope.hide_modal_station2 = function() {
     $("#station2_modal").modal('hide')
-    reset_barcode()
+    $scope.reset_barcode()
   }
 
   $scope.submit_station2 = function() {
     infoService.getInfo($scope.barcode).then(function(info) {
+      if (parseInt(info.status_code) == 403) {
+        $scope.permission_denied()
+        return;
+      }
       if (info.result == 'ok' && parseInt(info.state) == 0) {
         $scope.info = info
       } else if (info.result == 'ok' && parseInt(info.state) == 2) {
@@ -167,11 +185,15 @@ app.controller('barcodeController', function($scope, infoService) {
 
   $scope.hide_modal_station3 = function() {
     $("#station3_modal").modal('hide')
-    reset_barcode()
+    $scope.reset_barcode()
   }
 
   $scope.submit_station3 = function() {
     infoService.getInfo($scope.barcode).then(function(info) {
+      if (parseInt(info.status_code) == 403) {
+        $scope.permission_denied()
+        return;
+      }
       if (info.result == 'ok' && parseInt(info.state) == 2 && helper.boolToInt(
           info.is_gpa_verified) == 1 && helper.boolToInt(info.is_study_plan_verified) ==
         1) {
@@ -203,6 +225,7 @@ app.controller('barcodeController', function($scope, infoService) {
 
   $scope.submit = function() {
     $scope.have_come = Config.state_handle.HAVE_COME
+    $scope.overlap = false
     if (Config.STATION == 1) {
       $scope.submit_station1()
     } else if (Config.STATION == 2) {
@@ -218,6 +241,7 @@ app.controller('barcodeController', function($scope, infoService) {
 
 app.controller('headerController', function($scope) {
   $scope.header = {
-    'title': Station[Config.STATION].title
+    'title': Station[Config.STATION].title,
+    'path_logout': Config.PATH_LOGOUT
   }
 })
