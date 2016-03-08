@@ -43,15 +43,15 @@ app.service('infoService', function($http, $q) {
     return deferred.promise
   }
 
-  this.updateStation2 = function(national_id, gpa, study_plan) {
+  this.updateStation2 = function(national_id, gpa, study_plan, original_documents) {
     var deferred = $q.defer()
 
-    $.post(Config.PATH_POST_INFO + helper.decodeNationalID(
-      national_id), {
+    $.post(Config.PATH_POST_INFO + helper.decodeNationalID(national_id), {
       'data': JSON.stringify({
         'state': STATE_EDU_DOC_VERIFIED,
         'is_study_plan_verified': helper.boolToInt(study_plan),
-        'is_gpa_verified': helper.boolToInt(gpa)
+        'is_gpa_verified': helper.boolToInt(gpa),
+        'original_documents': helper.boolToInt(original_documents)
       })
 
     }).

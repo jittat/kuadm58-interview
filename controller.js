@@ -161,15 +161,18 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
   $scope.confirm_station2 = function() {
     var gpa_pass = $scope.gpa_pass
     var study_plan_pass = $scope.study_plan_pass
-    var all_pass = 'false';
+    var original_documents = $scope.original_documents
+    var all_pass = 'false'
 
     if (study_plan_pass == 'true' && gpa_pass == 'true') {
       all_pass = 'true';
     }
     // console.log($scope.info.n)
-    infoService.updateStation2($scope.info.national_id, gpa_pass,
-      study_plan_pass)
-    add_history($scope.info.full_name, $scope.info.major.title, all_pass);
+    infoService.updateStation2($scope.info.national_id,
+                               gpa_pass,
+                               study_plan_pass,
+                               original_documents)
+    add_history($scope.info.full_name, $scope.info.major.title, all_pass)
     $scope.hide_modal_station2()
   }
 
