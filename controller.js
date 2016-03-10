@@ -197,12 +197,12 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
         $scope.permission_denied()
         return;
       }
-      if (info.result == 'ok' && parseInt(info.state) == 2 && helper.boolToInt(
-          info.is_gpa_verified) == 1 && helper.boolToInt(info.is_study_plan_verified) ==
-        1) {
+      if (info.result == 'ok' &&
+          ((parseInt(info.state) == 2) || (parseInt(info.state)==4)) &&
+          helper.boolToInt(info.is_gpa_verified) == 1 &&
+          helper.boolToInt(info.is_study_plan_verified) == 1) {
         $scope.info = info
-      } else if (info.result == 'ok' && parseInt(
-          info.state) == 3) {
+      } else if (info.result == 'ok' && parseInt(info.state) == 3) {
         // handle come again
         $scope.info = info
         $scope.overlap = true
@@ -218,8 +218,7 @@ app.controller('barcodeController', function($scope, infoService, $sce) {
     var interview_pass = $scope.interview_pass
       // console.log($scope.info.n)
     infoService.updateStation3($scope.info.national_id, interview_pass)
-    add_history($scope.info.full_name, $scope.info.major.title,
-      interview_pass);
+    add_history($scope.info.full_name, $scope.info.major.title, interview_pass);
     $scope.hide_modal_station3()
   }
 
